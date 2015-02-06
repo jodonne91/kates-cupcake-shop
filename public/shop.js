@@ -21,6 +21,10 @@ var cupcakeShop = {
 
   },
 
+  retired: [
+
+  ],
+
   /*
     shop.price: A number, representing the price of a single cupcake.
   */
@@ -65,7 +69,13 @@ var cupcakeShop = {
   */
   removeFlavor: function(type) {
 
-    delete this.inventory[type]
+    if ( this.inventory[type] === undefined )
+      {return}
+
+    delete this.inventory[type];
+
+    this.retired.push(type);
+
 
   },
 
@@ -167,11 +177,42 @@ var cupcakeShop = {
 
     return false;
     
-  }
+  },
+
+
+  /*
+    Discount sale, sells cupcake but accepts discount parameter that gets applied to the sale price
+  */
+
+  discountSale: function(flavor, discount) {
+
+    if ( (this.inventory[flavor] === undefined) || (this.inventory[flavor] === 0) )
+    {
+      return false
+    }
+
+    this.inventory[flavor] -= 1
+
+    this.register += this.price*discount;
+
+    return true
+
+  },
+
+  /* 
+    bulk restock  : restocks all cupcakes with the accepted amount 
+  */
+
+  bulkRestock: function(count) {
+
+    for ( var flavor in this.inventory ){
+      this.inventory[flavor] += count;
+    }
+  },
+
+  retired: [],
 
 }
-
-
 /*
   This function exists for testing purposes. It's called before every test
     to ensure that results of previous tests don't have any effect on this one.

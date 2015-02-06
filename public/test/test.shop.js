@@ -59,6 +59,10 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
       expect(cupcakeShop.inventory).to.not.have.keys("red velvet");
     });
 
+    it("adds flavors to retired array", function(){
+      expect(cupcakeShop.retired).to.deep.equal(["red velvet"]);
+    });
+
   });
 
   describe("cupcakeShop.listFlavors", function(){
@@ -265,5 +269,57 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
     });
 
   });
+
+  describe("cupcakeShop.discountSale", function(){
+
+    it("exists", function(){
+      expect(cupcakeShop.discountSale).to.be.a("function");
+    });
+
+    it("should sell cupcakes at a discount", function(){
+      resetShop();
+
+      cupcakeShop.inventory = {
+        chocolate: 5,
+        strawberry: 3
+      }
+
+      var saleResult = cupcakeShop.discountSale("chocolate", .5);
+
+      expect(saleResult).to.equal(true);
+      expect(cupcakeShop.register).to.equal(1.5);
+      expect(cupcakeShop.inventory).to.deep.equal({
+        chocolate: 4,
+        strawberry: 3
+      });
+    });
+  });
+
+  describe("cupcakeShop.bulkRestock", function(){
+
+    it("exists", function(){
+      expect(cupcakeShop.bulkRestock).to.be.a("function");
+    });
+
+    it("adds to stock of existing flavors", function(){
+      resetShop();
+
+      cupcakeShop.inventory = {
+        chocolate: 8,
+        vanilla: 4,
+        strawberry: 0
+      }
+
+      cupcakeShop.bulkRestock(10)
+      
+      expect(cupcakeShop.inventory).to.deep.equal({
+        chocolate: 18,
+        vanilla: 14,
+        strawberry: 10
+      })
+    });
+
+  });
+
 
 });

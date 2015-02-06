@@ -15,21 +15,28 @@ var cupcakeShop = {
         vanilla: 2 
       }
   */
-  inventory: {},
+  inventory: {
+
+
+
+  },
 
   /*
     shop.price: A number, representing the price of a single cupcake.
   */
+
   price: 3,
 
   /*
     shop.register: A number, representing the amount of money in the cash register.
   */
+
   register: 0,
 
   /*
     shop.bank: A number, representing the amount of money in the business' bank account.
   */
+
   bank: 0,
 
   
@@ -41,7 +48,13 @@ var cupcakeShop = {
       overwrite its existing inventory.
 
   */
+
   addFlavor: function(type) {
+
+    if ( this.inventory[type] === undefined )
+    {
+      this.inventory[type] = 0;
+    }
 
   },
 
@@ -52,12 +65,16 @@ var cupcakeShop = {
   */
   removeFlavor: function(type) {
 
+    delete this.inventory[type]
+
   },
 
   /*
     shop.listFlavors: Returns a list of the flavors for sale.
   */
   listFlavors: function() {
+
+    return _.keys(this.inventory)
 
   },
 
@@ -67,7 +84,15 @@ var cupcakeShop = {
       
       If that that cupcake flavor is available, returns 0.
   */
+
   showStock: function(flavor) {
+
+    if(this.inventory[flavor] === undefined)
+    {
+      return 0;
+    }
+
+    return this.inventory[flavor];
 
   },
 
@@ -81,7 +106,15 @@ var cupcakeShop = {
 
       If that flavor DOESN'T exist in the inventory, do nothing.
   */
+
   restock: function(flavor, count) {
+
+    if (this.inventory[flavor] === undefined)
+    {
+      return
+    }
+
+    this.inventory[flavor] += count;
 
   },
 
@@ -96,7 +129,19 @@ var cupcakeShop = {
       If that cupcake flavor is not available, or is out of inventory,
         then return false.
   */
+
   makeSale: function(flavor) {
+
+    if ( (this.inventory[flavor] === undefined) || this.inventory[flavor] === 0 )
+    {
+      return false
+    }
+
+    this.inventory[flavor] -= 1
+
+    this.register += this.price;
+
+    return true
 
   },
 
@@ -106,7 +151,11 @@ var cupcakeShop = {
 
       (Think of this like depositing the day's take in the bank at night.)
   */
+
   reconcile: function() {
+
+    this.bank += this.register;
+    this.register = 0;
 
   },
 
@@ -115,6 +164,8 @@ var cupcakeShop = {
       (Note: This shop does not ever sell cookies. It is a cupcake shop.)
   */
   sellsCookies: function() {
+
+    return false;
     
   }
 
@@ -129,9 +180,12 @@ var cupcakeShop = {
 
     Don't modify it.
 */
+
 var resetShop = function() {
+
   cupcakeShop.inventory = {};
   cupcakeShop.price = 3;
   cupcakeShop.register = 0;
   cupcakeShop.bank = 0;
+
 }

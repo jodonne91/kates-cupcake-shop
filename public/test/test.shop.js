@@ -9,17 +9,17 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
     it("can create new flavors", function(){
       resetShop();
 
-      cupcakeShop.addFlavor("chocolate");
+      cupcakeShop.addFlavor("chocolate",2);
       expect(cupcakeShop.inventory).to.have.keys("chocolate");
-      cupcakeShop.addFlavor("vanilla");
+      cupcakeShop.addFlavor("vanilla",1);
       expect(cupcakeShop.inventory).to.have.keys("vanilla", "chocolate");
-      cupcakeShop.addFlavor("strawberry");
+      cupcakeShop.addFlavor("strawberry",3);
       expect(cupcakeShop.inventory).to.have.keys("vanilla", "chocolate", "strawberry");
 
       expect(cupcakeShop.inventory).to.deep.equal({
-        chocolate: 0,
-        vanilla: 0,
-        strawberry: 0
+        chocolate: [0,2],
+        vanilla: [0,1],
+        strawberry: [0,3]
       })
 
     });
@@ -28,12 +28,12 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
       resetShop();
 
       cupcakeShop.addFlavor("chocolate");
-      cupcakeShop.inventory.chocolate = 10;
+      cupcakeShop.inventory.chocolate = [10,2];
 
       cupcakeShop.addFlavor("chocolate");
 
       expect(cupcakeShop.inventory).to.have.keys("chocolate");
-      expect(cupcakeShop.inventory.chocolate).to.equal(10);
+      expect(cupcakeShop.inventory.chocolate).to.deep.equal([10,2]);
     });
 
   });
@@ -48,9 +48,9 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
       resetShop();
 
       cupcakeShop.inventory = {
-        chocolate: 10,
-        vanilla: 5,
-        "red velvet": 15
+        chocolate: [10,2],
+        vanilla: [5,1],
+        "red velvet": [15,0]
       }
 
       cupcakeShop.removeFlavor("red velvet"); // so gross
@@ -81,10 +81,10 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
       resetShop();
 
       cupcakeShop.inventory = {
-        chocolate: 10,
-        vanilla: 5,
-        strawberry: 14,
-        "red velvet": 0
+        chocolate: [10,6],
+        vanilla: [5,7],
+        strawberry: [14,9],
+        "red velvet": [0,0]
       }
 
       expect(cupcakeShop.listFlavors()).to.be.same.members([
@@ -108,8 +108,8 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
       resetShop();
 
       cupcakeShop.inventory = {
-        vanilla: 20,
-        chocolate: 0
+        vanilla: [20,1],
+        chocolate: [0,2]
       }
 
       expect(cupcakeShop.showStock("vanilla")).to.equal(20)
@@ -120,7 +120,7 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
       resetShop();
 
       cupcakeShop.inventory = {
-        vanilla: 20
+        vanilla: [20,2]
       }
 
       expect(cupcakeShop.showStock("strawberry")).to.equal(0)
@@ -138,18 +138,18 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
       resetShop();
 
       cupcakeShop.inventory = {
-        chocolate: 8,
-        vanilla: 4,
-        strawberry: 0
+        chocolate: [8,2],
+        vanilla: [4,2],
+        strawberry: [0,3]
       }
 
       cupcakeShop.restock("vanilla", 10)
       cupcakeShop.restock("strawberry", 3)
       
       expect(cupcakeShop.inventory).to.deep.equal({
-        chocolate: 8,
-        vanilla: 14,
-        strawberry: 3
+        chocolate: [8,2],
+        vanilla: [14,2],
+        strawberry: [3,3]
       })
     });
 
@@ -157,15 +157,15 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
       resetShop();
 
       cupcakeShop.inventory = {
-        chocolate: 8,
-        vanilla: 4
+        chocolate: [8,2],
+        vanilla: [4,3]
       }
 
       cupcakeShop.restock("rhubarb", 6)
       
       expect(cupcakeShop.inventory).to.deep.equal({
-        chocolate: 8,
-        vanilla: 4
+        chocolate: [8,2],
+        vanilla: [4,3]
       })
     });
 
@@ -181,17 +181,17 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
       resetShop();
 
       cupcakeShop.inventory = {
-        chocolate: 5,
-        strawberry: 3
+        chocolate: [5,2],
+        strawberry: [3,3]
       }
 
       var saleResult = cupcakeShop.makeSale("chocolate");
 
       expect(saleResult).to.equal(true);
-      expect(cupcakeShop.register).to.equal(3);
+      expect(cupcakeShop.register).to.equal(2);
       expect(cupcakeShop.inventory).to.deep.equal({
-        chocolate: 4,
-        strawberry: 3
+        chocolate: [4,2],
+        strawberry: [3,3]
       })
     });
 
@@ -199,8 +199,8 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
       resetShop();
 
       cupcakeShop.inventory = {
-        chocolate: 5,
-        strawberry: 0
+        chocolate: [5,2],
+        strawberry: [0,3]
       }
 
       var saleResult = cupcakeShop.makeSale("strawberry");
@@ -208,8 +208,8 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
       expect(saleResult).to.equal(false);
       expect(cupcakeShop.register).to.equal(0);
       expect(cupcakeShop.inventory).to.deep.equal({
-        chocolate: 5,
-        strawberry: 0
+        chocolate: [5,2],
+        strawberry: [0,3]
       })
 
     });
@@ -218,8 +218,8 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
       resetShop();
 
       cupcakeShop.inventory = {
-        chocolate: 5,
-        strawberry: 3
+        chocolate: [5,2],
+        strawberry: [3,3]
       }
 
       var saleResult = cupcakeShop.makeSale("vanilla");
@@ -227,8 +227,8 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
       expect(saleResult).to.equal(false);
       expect(cupcakeShop.register).to.equal(0);
       expect(cupcakeShop.inventory).to.deep.equal({
-        chocolate: 5,
-        strawberry: 3
+        chocolate: [5,2],
+        strawberry: [3,3]
       })
     });
 
@@ -280,8 +280,8 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
       resetShop();
 
       cupcakeShop.inventory = {
-        chocolate: 5,
-        strawberry: 3
+        chocolate: [5,3],
+        strawberry: [3,3]
       }
 
       var saleResult = cupcakeShop.discountSale("chocolate", .5);
@@ -289,8 +289,8 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
       expect(saleResult).to.equal(true);
       expect(cupcakeShop.register).to.equal(1.5);
       expect(cupcakeShop.inventory).to.deep.equal({
-        chocolate: 4,
-        strawberry: 3
+        chocolate: [4,3],
+        strawberry: [3,3]
       });
     });
   });
@@ -305,17 +305,17 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
       resetShop();
 
       cupcakeShop.inventory = {
-        chocolate: 8,
-        vanilla: 4,
-        strawberry: 0
+        chocolate: [8,2],
+        vanilla: [4,1],
+        strawberry: [0,3]
       }
 
       cupcakeShop.bulkRestock(10)
       
       expect(cupcakeShop.inventory).to.deep.equal({
-        chocolate: 18,
-        vanilla: 14,
-        strawberry: 10
+        chocolate: [18,2],
+        vanilla: [14,1],
+        strawberry: [10,3]
       })
     });
 

@@ -15,6 +15,18 @@ var cupcakeShop = {
         vanilla: 2 
       }
   */
+
+  /* UPDATE IMPOSSIBLE MODE 
+
+    inventory:
+    {
+  
+      flavor: [qty, price]
+
+    }
+
+    */
+
   inventory: {
 
 
@@ -53,11 +65,11 @@ var cupcakeShop = {
 
   */
 
-  addFlavor: function(type) {
+  addFlavor: function(type, cost) {
 
     if ( this.inventory[type] === undefined )
     {
-      this.inventory[type] = 0;
+      this.inventory[type] = [0,cost];
     }
 
   },
@@ -92,7 +104,7 @@ var cupcakeShop = {
     shop.showStock: Accepts a string as a parameter, representing a cupcake flavor.
       Returns the quantity of that cupcake flavor in the inventory.
       
-      If that that cupcake flavor is available, returns 0.
+      If that that cupcake flavor is not available, returns 0.
   */
 
   showStock: function(flavor) {
@@ -102,7 +114,7 @@ var cupcakeShop = {
       return 0;
     }
 
-    return this.inventory[flavor];
+    return this.inventory[flavor][0];
 
   },
 
@@ -124,7 +136,7 @@ var cupcakeShop = {
       return
     }
 
-    this.inventory[flavor] += count;
+    this.inventory[flavor][0] += count;
 
   },
 
@@ -142,14 +154,14 @@ var cupcakeShop = {
 
   makeSale: function(flavor) {
 
-    if ( (this.inventory[flavor] === undefined) || this.inventory[flavor] === 0 )
+    if ( (this.inventory[flavor] === undefined) || this.inventory[flavor][0] === 0 )
     {
       return false
     }
 
-    this.inventory[flavor] -= 1
+    this.inventory[flavor][0] -= 1
 
-    this.register += this.price;
+    this.register += this.inventory[flavor][1];
 
     return true
 
@@ -186,14 +198,14 @@ var cupcakeShop = {
 
   discountSale: function(flavor, discount) {
 
-    if ( (this.inventory[flavor] === undefined) || (this.inventory[flavor] === 0) )
+    if ( (this.inventory[flavor] === undefined) || (this.inventory[flavor][0] === 0) )
     {
       return false
     }
 
-    this.inventory[flavor] -= 1
+    this.inventory[flavor][0] -= 1
 
-    this.register += this.price*discount;
+    this.register += this.inventory[flavor][1]*discount;
 
     return true
 
@@ -206,11 +218,9 @@ var cupcakeShop = {
   bulkRestock: function(count) {
 
     for ( var flavor in this.inventory ){
-      this.inventory[flavor] += count;
+      this.inventory[flavor][0] += count;
     }
-  },
-
-  retired: [],
+  }
 
 }
 /*
@@ -225,7 +235,7 @@ var cupcakeShop = {
 var resetShop = function() {
 
   cupcakeShop.inventory = {};
-  cupcakeShop.price = 3;
+  // price not needed in newest update cupcakeShop.price = 3;
   cupcakeShop.register = 0;
   cupcakeShop.bank = 0;
 

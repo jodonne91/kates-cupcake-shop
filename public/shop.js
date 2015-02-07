@@ -67,7 +67,7 @@ var cupcakeShop = {
 
   addFlavor: function(type, cost) {
 
-    if ( this.inventory[type] === undefined )
+    if ( !(type in this.inventory) )
     {
       this.inventory[type] = [0,cost];
     }
@@ -81,14 +81,12 @@ var cupcakeShop = {
   */
   removeFlavor: function(type) {
 
-    if ( this.inventory[type] === undefined )
-      {return}
-
-    delete this.inventory[type];
-
-    this.retired.push(type);
-
-
+    if ( (type in this.inventory) )
+      {
+        delete this.inventory[type];
+        this.retired.push(type);
+      } 
+      return
   },
 
   /*
@@ -109,12 +107,12 @@ var cupcakeShop = {
 
   showStock: function(flavor) {
 
-    if(this.inventory[flavor] === undefined)
+    if(flavor in this.inventory)
     {
-      return 0;
+      return this.inventory[flavor][0];;
     }
 
-    return this.inventory[flavor][0];
+    return 0
 
   },
 
@@ -131,12 +129,12 @@ var cupcakeShop = {
 
   restock: function(flavor, count) {
 
-    if (this.inventory[flavor] === undefined)
-    {
-      return
+    if (flavor in this.inventory)
+    { 
+      this.inventory[flavor][0] += count;
     }
 
-    this.inventory[flavor][0] += count;
+    return
 
   },
 
@@ -154,7 +152,7 @@ var cupcakeShop = {
 
   makeSale: function(flavor) {
 
-    if ( (this.inventory[flavor] === undefined) || this.inventory[flavor][0] === 0 )
+    if ( !(flavor in this.inventory) || this.inventory[flavor][0] === 0 )
     {
       return false
     }
@@ -198,7 +196,7 @@ var cupcakeShop = {
 
   discountSale: function(flavor, discount) {
 
-    if ( (this.inventory[flavor] === undefined) || (this.inventory[flavor][0] === 0) )
+    if ( !(flavor in this.inventory) || (this.inventory[flavor][0] === 0) )
     {
       return false
     }
